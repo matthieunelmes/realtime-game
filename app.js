@@ -41,7 +41,7 @@ function preload() {
 
 function create() {
     var self = this;
-    this.socket = io('localhost:8081');
+    this.socket = io('https://realtime-game-server.herokuapp.com:8081');
 
     if (!game.device.desktop) { game.input.onDown.add(gofull, this); } //go fullscreen on mobile devices
 
