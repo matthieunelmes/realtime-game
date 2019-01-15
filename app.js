@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
 
 
 /*
@@ -43,7 +43,10 @@ function create() {
     var self = this;
     this.socket = io('https://realtime-game-server.herokuapp.com:443');
 
-    if (!game.device.desktop) { game.input.onDown.add(gofull, this); } //go fullscreen on mobile devices
+    // if (!game.device.desktop) { game.input.onDown.add(gofull, this); } //go fullscreen on mobile devices
+    // game.input.onDown.add(gofull, this);
+
+    // game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
     game.physics.startSystem(Phaser.Physics.P2JS);  //activate physics
     game.physics.p2.gravity.y = 1200;  //realistic gravity
@@ -88,22 +91,19 @@ function create() {
     this.socket.on('playerMoved', function (playerInfo) {
         otherPlayers.forEach(function (otherPlayer) {
             if (playerInfo.playerId === otherPlayer.playerId) {
-                otherPlayer.position.x = playerInfo.x;
-                otherPlayer.position.y = playerInfo.y;
+                otherPlayer.body.x = playerInfo.x;
+                otherPlayer.body.y = playerInfo.y;
                 console.log(playerInfo);
                 if(playerInfo.d == 'left'){
                     otherPlayer.scale.x = -1;
-                    otherPlayer.body.moveLeft(500);
-                    otherPlayer.direction = 'left';
+                    // otherPlayer.body.moveLeft(500);
                     otherPlayer.animations.play('walk');
                 }else if(playerInfo.d == 'right'){
                     otherPlayer.scale.x = 1;
-                    otherPlayer.body.moveRight(500);
-                    otherPlayer.d = 'right';
+                    // otherPlayer.body.moveRight(500);
                     otherPlayer.animations.play('walk');
                 }else if(playerInfo.d == 'none'){
                     otherPlayer.loadTexture('mario', 0);
-                    otherPlayer.d = 'none';
                 }
             }
         });
